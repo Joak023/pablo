@@ -9,7 +9,9 @@ const ItemDetail = ({ product }) => {
     addToCart(product, quantity);
     console.log(`Agregado al carrito: ${product.name} x${quantity}`);
   };
+
   const domain = window.location.hostname === "localhost" ? "localhost:5173" : window.location.hostname;
+
   return (
     <div className="item-detail">
       <img src={`${window.location.protocol}//${domain}/${product.image}`} alt={product.name} className="detail-img" />
@@ -17,7 +19,7 @@ const ItemDetail = ({ product }) => {
         <h2>{product.name}</h2>
         <p>{product.description}</p>
         <p><strong>${product.price}</strong></p>
-        <ItemCount stock={10} initial={1} onAdd={handleAdd} />
+        <ItemCount stock={10} initial={0} onAdd={handleAdd} />
       </div>
     </div>
   );

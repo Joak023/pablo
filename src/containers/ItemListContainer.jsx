@@ -1,27 +1,33 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import productsData from "../data/Products";
+import { useParams } from "react-router-dom";
 import ItemList from "../Components/ItemList";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../services/firebaseConfig";
 
 const ItemListContainer = () => {
   const { categoryId } = useParams();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const fetchProducts = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(
-          categoryId
-            ? productsData.filter((prod) => prod.category === categoryId)
-            : productsData
-        );
-      }, 1000);
-    });
+    const productsCollection = collection(db, "products");
+    const q = categoryId 
+      ? query(productsCollection, where("category", "==", categoryId))
+      : productsCollection;
 
-    fetchProducts.then((res) => setProducts(res));
+    getDocs(q)
+      .then((response) => {
+        const productsAdapted = response.docs.map((doc) => {
+          return { id: doc.id, ...doc.data() };
+        });
+        setProducts(productsAdapted);
+      })
+      .catch((error) => {
+        console.error("Error cargando productos:", error);
+      });
   }, [categoryId]);
 
   return <ItemList products={products} />;
 };
 
 export default ItemListContainer;
+ 

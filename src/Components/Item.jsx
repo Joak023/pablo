@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 
 const Item = ({ product }) => {
-  const domain = window.location.hostname === "localhost" ? "localhost:5173" : window.location.hostname;
+   const baseUrl = `${window.location.protocol}//${window.location.host}`;
+  
   return (
     <div className="item-card">
-      <img src={`${window.location.protocol}//${domain}/${product.image}`} alt={product.name} />
+      <img src={`${baseUrl}/${product.image}`} alt={product.name} />
+
       <h3>{product.name}</h3>
       <p>${product.price}</p>
       <Link to={`/item/${product.id}`}>
